@@ -51,44 +51,57 @@ export default function Reviews() {
           </div>
         </motion.div>
 
-        {/* Reviews grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review, idx) => (
-            <motion.article
-              key={review.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.08, duration: 0.5 }}
-              whileHover={{ y: -5 }}
-              className="relative bg-cream-50 rounded-2xl p-6 shadow-md shadow-oak-900/5 border border-cream-300/50 hover:shadow-xl hover:shadow-oak-900/8 transition-shadow duration-300"
-            >
-              <Quote size={32} className="absolute top-5 right-5 text-terracotta-200" />
+        {/* Reviews carousel (auto-scrolling, pauses on hover/focus) */}
+        <div
+          className="reviews-marquee -mx-4 sm:-mx-6 lg:-mx-8 py-4"
+          role="region"
+          aria-label="Avis clients"
+        >
+          <div
+            className="reviews-marquee-track"
+            style={{ animationDuration: `${reviews.length * 7}s` }}
+          >
+            {[...reviews, ...reviews].map((review, idx) => {
+              const isClone = idx >= reviews.length;
+              return (
+                <div
+                  key={`${review.name}-${idx}`}
+                  className="w-[300px] sm:w-[360px] shrink-0 pr-6"
+                  aria-hidden={isClone || undefined}
+                >
+                  <article
+                    tabIndex={isClone ? -1 : 0}
+                    className="relative h-full bg-cream-50 rounded-2xl p-6 shadow-md shadow-oak-900/5 border border-cream-300/50 hover:shadow-xl hover:shadow-oak-900/10 hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <Quote size={32} className="absolute top-5 right-5 text-terracotta-200" />
 
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
-                ))}
-              </div>
+                    <div className="flex items-center gap-1 mb-4">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
 
-              <p className="text-oak-700 text-sm leading-relaxed mb-5 pr-8">
-                « {review.text} »
-              </p>
+                    <p className="text-oak-700 text-sm leading-relaxed mb-5 pr-8">
+                      « {review.text} »
+                    </p>
 
-              <div className="flex items-center gap-3 pt-4 border-t border-cream-300/50">
-                <img
-                    loading="lazy"
-                  src={review.avatar}
-                  alt={review.name}
-                  className="w-11 h-11 rounded-full object-cover border-2 border-terracotta-200"
-                />
-                <div>
-                  <p className="font-semibold text-oak-800 text-sm">{review.name}</p>
-                  <p className="text-xs text-oak-400">{review.date}</p>
+                    <div className="flex items-center gap-3 pt-4 border-t border-cream-300/50">
+                      <img
+                        loading="lazy"
+                        src={review.avatar}
+                        alt={isClone ? '' : review.name}
+                        className="w-11 h-11 rounded-full object-cover border-2 border-terracotta-200"
+                      />
+                      <div>
+                        <p className="font-semibold text-oak-800 text-sm">{review.name}</p>
+                        <p className="text-xs text-oak-400">{review.date}</p>
+                      </div>
+                    </div>
+                  </article>
                 </div>
-              </div>
-            </motion.article>
-          ))}
+              );
+            })}
+          </div>
         </div>
 
         {/* CTA */}

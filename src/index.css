@@ -101,6 +101,35 @@ img {
   -webkit-user-drag: none;
 }
 
+/* Carrousel d'avis : défilement infini (liste dupliquée, translation de -50 %) */
+.reviews-marquee {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.reviews-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: reviews-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+.reviews-marquee:hover .reviews-marquee-track,
+.reviews-marquee:focus-within .reviews-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes reviews-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -111,5 +140,15 @@ img {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .reviews-marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .reviews-marquee-track {
+    animation: none !important;
   }
 }

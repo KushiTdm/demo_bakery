@@ -1,7 +1,18 @@
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, MapPin, Sparkles } from 'lucide-react';
 
 export default function Hero() {
+  const [introDone, setIntroDone] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+
+  // Filet de sécurité : si la vidéo ne démarre pas / ne se termine pas, on bascule sur l'image
+  useEffect(() => {
+    const t = setTimeout(() => setIntroDone(true), 6000);
+    return () => clearTimeout(t);
+  }, []);
+
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -9,14 +20,35 @@ export default function Hero() {
 
   return (
     <section className="relative h-screen min-h-[640px] w-full overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img
-          src="/hero.jpg"
-          fetchPriority="high"
-          alt="Pains artisanaux sur étagères en bois dans une boulangerie chaleureuse"
-          className="h-full w-full object-cover animate-kenburns"
-        />
+      {/* Background : image (révélée en fondu) puis vidéo d'intro par-dessus */}
+      <div className="absolute inset-0 bg-oak-900">
+        {introDone && (
+          <img
+            src="/hero.jpg"
+            fetchPriority="high"
+            alt="Intérieur chaleureux de la boulangerie : vitrine de viennoiseries et pains artisanaux"
+            className="h-full w-full object-cover animate-kenburns"
+          />
+        )}
+        <AnimatePresence>
+          {!introDone && (
+            <motion.video
+              key="intro"
+              src="/hero-video.mp4"
+              poster="/hero-poster.jpg"
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              onEnded={() => setIntroDone(true)}
+              onError={() => setIntroDone(true)}
+              initial={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.06 }}
+              transition={{ duration: 1.4, ease: 'easeInOut' }}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
+        </AnimatePresence>
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(61,38,29,0.35)_0%,transparent_70%)]" />
       </div>
@@ -28,7 +60,7 @@ export default function Hero() {
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
           className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass-dark text-cream-100 text-xs sm:text-sm font-medium tracking-wide"
         >
@@ -38,7 +70,7 @@ export default function Hero() {
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.9, delay: 0.15 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-cream-50 text-shadow-lg max-w-4xl leading-[1.1]"
         >
@@ -50,7 +82,7 @@ export default function Hero() {
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.35 }}
           className="mt-6 max-w-xl text-cream-100/90 text-base sm:text-lg font-body text-shadow-md"
         >
@@ -59,7 +91,7 @@ export default function Hero() {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.55 }}
           className="mt-9 flex flex-col sm:flex-row items-center gap-4"
         >
@@ -83,7 +115,7 @@ export default function Hero() {
       <motion.button
         onClick={() => scrollTo('#produits')}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: introDone ? 1 : 0 }}
         transition={{ delay: 1.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-cream-100/70 hover:text-cream-100 transition-colors"
         aria-label="Défiler vers le bas"
