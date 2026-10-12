@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: #FBF8F3;
+  color: #3D261D;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FBF8F3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D9A08B;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C68468;
+}
+
+::selection {
+  background-color: #97C2B9;
+  color: #3D261D;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.heading-line::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #C49A6C, #97C2B9);
+  border-radius: 2px;
+  margin-top: 12px;
+}
+
+.heading-line-center::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #C49A6C, #97C2B9);
+  border-radius: 2px;
+  margin: 12px auto 0;
+}
+
+.arch-top {
+  border-top-left-radius: 50% 24px;
+  border-top-right-radius: 50% 24px;
+}
+
+.text-shadow-lg {
+  text-shadow: 0 2px 20px rgba(61, 38, 29, 0.5);
+}
+
+.text-shadow-md {
+  text-shadow: 0 2px 12px rgba(61, 38, 29, 0.4);
+}
+
+.glass {
+  background: rgba(251, 248, 243, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-dark {
+  background: rgba(61, 38, 29, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+:focus-visible {
+  outline: 2px solid #7DAE9F;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
